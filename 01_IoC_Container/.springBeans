@@ -13,6 +13,7 @@
 		<config>src/main/resources/xml05/app-context.xml</config>
 		<config>src/main/resources/xml06/app-context.xml</config>
 		<config>src/main/resources/java_into_xml/app-context.xml</config>
+		<config>src/main/resources/xml_into_java/app-context.xml</config>
 	</configs>
 	<autoconfigs>
 		<config>src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml</config>

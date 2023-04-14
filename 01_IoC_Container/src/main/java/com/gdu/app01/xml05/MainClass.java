@@ -24,6 +24,7 @@ public class MainClass {
 		for(String contact : contacts) {
 			System.out.println("연락처 : " + contact);
 		}
+		
 		Map<String, String> friends = p.getFriends();
 		for(Entry<String, String> entry : friends.entrySet()) {
 			System.out.println(entry.getKey() + " : " + entry.getValue());

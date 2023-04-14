@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 	1) Spring Container에 Bean을 만들어 두는 Java 클래스라는 뜻
     2) Spring Bean Configuration File하고 같은 역할
  */
+
 @Configuration
 public class AppContext {
 

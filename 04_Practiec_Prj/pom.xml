@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gdu</groupId>
 	<artifactId>app04</artifactId>
-	<name>04_Jdbc_JUnit</name>
+	<name>04_Practiec_Prj</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
@@ -14,7 +14,6 @@
 		<org.slf4j-version>1.7.30</org.slf4j-version>
 	</properties>
 	<dependencies>
-	
 	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
@@ -117,7 +116,7 @@
 			<version>1</version>
 		</dependency>
 				
-		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+				<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>javax.servlet-api</artifactId>
@@ -143,15 +142,7 @@
 			<artifactId>junit</artifactId>
 			<version>4.13.2</version>
 			<scope>test</scope>
-		</dependency>    
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-test</artifactId>
-		    <version>${org.springframework-version}</version>
-		    <scope>test</scope>
-		</dependency>
-	  
+		</dependency>        
 	</dependencies>
     <build>
         <plugins>

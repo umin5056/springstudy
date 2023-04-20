@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- '.'를 이용해서 경로를 지정하기 때문에 확장자의 입력은 생략한다. -->
+  
+<mapper namespace="mybatis.mapper.bbs"> <!-- bbs파일을 의미 -->
+
+	<!-- 목록 -->
+	<!-- resultType으로 반환하는 타입이 객체일 경 파일 경로를 적어줘야지 반환이 가능하다. -->
+	<select id="selectAllBbsList" resultType="domain.BbsDTO">
+		SELECT BBS_NO, TITLE, CONTENT, MODIFIED_DATE, CREATED_DATE
+		  FROM BBS
+		 ORDER BY BBS_NO DESC 
+	</select>
+	
+<!-- ${변수} : 변수값을 가져옴 -->	
+	
+	<!-- 상세 -->
+	<!-- parameterType으로 매개변수의 타입을 적어줘야 변수를 받을 수 있다. -->
+  	<select id="selectBbsByNo" parameterType="int" resultType="domain.BbsDTO">
+  		SELECT BBS_NO, TITLE, CONTENT, MODIFIED_DATE, CREATED_DATE
+		  FROM BBS
+		 WHERE BBS_NO = #{bbsNo}
+  	</select>
+  	
+  	<!-- 삽입 -->
+  	<!-- 삽입, 수정, 삭제는 resultType을 지정하지 않아도 된다. int 고정이기 때 -->
+  	<insert id="insertBbs" parameterType="domain.BbsDTO">
+  		INSERT INTO BBS
+  			(BBS_NO, TITLE, CONTENT, CREATED_DATE)
+  		VALUES
+  			(BBS_SEQ.NEXTVAL, #{title}, #{content}, TO_CHAR(SYSDATE, 'YY.MM.DD HH:MI:SS'))
+  	</insert>
+  	
+  	<!-- 수정 -->
+  	<update id="updateBbs" parameterType="domain.BbsDTO">
+  		UPDATE BBS
+  		   SET TITLE = #{title}
+  		     , CONTENT = #{content}
+  		     , MODIFIED_DATE = TO_CHAR(SYSDATE, 'YY.MM.DD HH:MI:SS')
+  		 WHERE BBS_NO = #{bbsNo} 
+  	</update>
+  	
+  	<!-- 삭제 -->
+  	<delete id="deleteBbs" parameterType="int">
+  		DELETE
+  		  FROM BBS
+  		 WHERE BBS_NO = #{bbsNo} 
+  	</delete>
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+</mapper>

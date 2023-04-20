@@ -31,32 +31,28 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Override
 	public List<BoardDTO> getBoardList() {
-		// TODO Auto-generated method stub
-		return null;
+		List<BoardDTO> boardList = boardDAO.selectBoardList();
+		return boardList;
 	}
 
 	@Override
 	public BoardDTO getBoardByNo(int board_no) {
-		// TODO Auto-generated method stub
-		return null;
+		return boardDAO.selectBoardByNo(board_no);
 	}
 
 	@Override
 	public int addBoard(BoardDTO board) {
-		// TODO Auto-generated method stub
-		return 0;
+		return boardDAO.insertBoard(board);
 	}
 
 	@Override
 	public int modifyBoard(BoardDTO board) {
-		// TODO Auto-generated method stub
-		return 0;
+		return boardDAO.updateBoard(board);
 	}
 
 	@Override
 	public int removeBoard(int board_no) {
-		// TODO Auto-generated method stub
-		return 0;
+		return boardDAO.deleteBoard(board_no);
 	}
 
 }

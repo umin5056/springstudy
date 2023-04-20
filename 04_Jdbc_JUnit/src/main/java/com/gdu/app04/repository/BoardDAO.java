@@ -23,7 +23,7 @@ public class BoardDAO {
 	private String sql;
 	
 	// private 메소드
-	public Connection getConnection() {
+	private Connection getConnection() {
 		try {
 			Class.forName("oracle.jdbc.OracleDriver"); // ojdbc8.jar 메모리 로드
 			return DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "GDJ61", "1111");
@@ -54,7 +54,7 @@ public class BoardDAO {
 		List<BoardDTO> list = new ArrayList<>();
 		try {
 			con = getConnection();
-			sql = "SELECT BOARD_NO, TITLE, WRITER, CONTENT, CREATED_AT, MODIFIED_AT FROM BOARD ORDER BY BOARD_NO DESC";
+			sql = "SELECT BOARD_NO, TITLE, CONTENT, WRITER, CREATED_AT, MODIFIED_AT FROM BOARD ORDER BY BOARD_NO DESC";
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
 			while(rs.next()) {
@@ -73,7 +73,7 @@ public class BoardDAO {
 		BoardDTO board = null;
 		try {
 			con = getConnection();
-			sql = "SELECT BOARD_NO, TITLE, WRITER, CONTENT, CREATED_AT, MODIFIED_AT FROM BOARD WHERE BOARD_NO = ?";
+			sql = "SELECT BOARD_NO, TITLE, CONTENT, WRITER, CREATED_AT, MODIFIED_AT FROM BOARD WHERE BOARD_NO = ?";
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, board_no);
 			rs = ps.executeQuery();
@@ -98,7 +98,7 @@ public class BoardDAO {
 			ps.setString(1, board.getTitle());
 			ps.setString(2, board.getContent());
 			ps.setString(3, board.getWriter());
-			
+
 			result = ps.executeUpdate();
 		}catch(Exception e) {
 			e.printStackTrace();

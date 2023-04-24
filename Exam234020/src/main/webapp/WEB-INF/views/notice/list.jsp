@@ -10,7 +10,7 @@
 <script src="${contextPath}/resources/js/lib/jquery-3.6.4.min.js"></script>
 <script>
 	function fnInit(){
-		let addResult = '${addResult}';
+		let addResult = '${addResult}'';
 		if(addResult != '') {
 			if(addResult == '1'){
 				alert('공지사항이 등록되었습니다.');

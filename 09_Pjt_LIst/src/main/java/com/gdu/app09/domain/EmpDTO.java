@@ -21,6 +21,7 @@ public class EmpDTO {
 	private double salary;
 	private double commissionPct;
 	private int managerId;
-	private int departmentId;
+	// private int departmentId;
+	private DeptDTO dept;
 	
 }

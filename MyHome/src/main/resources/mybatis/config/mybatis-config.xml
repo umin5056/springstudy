@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	 <!-- settings : board_no -> boardNo로 자동 매핑시켜줌 -->
+	 <settings>
+	 		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	 </settings>
+	 
+	 <!-- typeAliases : type에 들어있는 값을 alias의 값으로 줄여서 사용할 수 있다.	 -->
+	<typeAliases> 
+		  <typeAlias alias="Member" type="com.gdu.app00.domain.MemberDTO"/>
+		  <typeAlias alias="Notice" type="com.gdu.app00.domain.NoticeDTO"/>
+	</typeAliases>
+	
+</configuration>

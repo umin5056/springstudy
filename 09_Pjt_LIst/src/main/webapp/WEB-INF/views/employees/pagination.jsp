@@ -10,6 +10,55 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="${contextPath}/resources/js/lib/jquery-3.6.4.min.js"></script>
+<script>
+	$(function() {
+		// recordPerPage의 변경
+		$('#recordPerPage').on('change', function() {
+			// session에 recordPerPage 올리기
+			location.href='${contextPath}/employees/change/record.do?recordPerPage=' + $(this).val();
+		})	
+		// 세션에 저장된 recoredPerPage값으로 <select> 태그의 값을 세팅
+  		let recordPerPage = '${sessionScope.recordPerPage}' == '' ? '10' : '${sessionScope.recordPerPage}';
+		$('#recordPerPage').val(recordPerPage); 
+		// 제목을 클릭하면 정렬 방식을 바꿈
+		$('.title').on('click', function() {
+			location.href='${contextPath}/employees/pagination.do?column='+ $(this).data('column')
+							+ '&order=' + $(this).data('order')
+							+ '&page=' + ${page};
+		})
+		
+	})
+</script>
+<style>
+	thead td {
+	background-color: skyblue;
+	}
+	.title{
+		cursor: potiter;
+	}
+	.pagination {
+		width: 350px;
+		margin: 0 auto;
+	}
+	.pagination span, .pagination a {
+		display: inline-block;
+		width: 50px;
+	}
+	.hidden {
+		visibility: hidden;
+	}
+	.strong {
+		font-weight: 900;
+	}
+	.link {
+	}
+	table { 
+		width: 1500px;
+	}
+	table td:nth-of-type(1) {width: 30px;}
+	table td:nth-of-type(2) {width: 80px;}
+	table td:nth-of-type(3) {width: 150px;}
+</style>
 </head>
 <body>
 
@@ -20,7 +69,9 @@
 	<div>
 		<h1>사원 목록</h1>
 		<div>
-			<select>
+			<select id="recordPerPage">
+				<option value="1">1개</option>
+				<option value="5">5개</option>
 				<option value="10">10개</option>
 				<option value="20">20개</option>
 				<option value="30">30개</option>
@@ -31,23 +82,23 @@
 			<thead>
 				<tr>
 					<td>순번</td>
-					<td>사원번호</td>
-					<td>사원명</td>
-					<td>이메일</td>
-					<td>전화번호</td>
-					<td>입사일자</td>
-					<td>직업</td>
-					<td>연봉</td>
-					<td>커미션</td>
-					<td>매니저</td>
-					<td>부서번호</td>
-					<td>부서명</td>
+					<td><span class="title"	data-column="EMPLOYEE_ID" data-order="${order}">사원번호</span></td>
+					<td><span class="title"	data-column="FIRST_NAME" data-order="${order}">사원명</span></td>
+					<td><span class="title"	data-column="EMAIL" data-order="${order}">이메일</span></td>
+					<td><span class="title"	data-column="PHONE_NUMBER" data-order="${order}">전화번호</span></td>
+					<td><span class="title"	data-column="HIRE_DATE" data-order="${order}">입사일자</span></td>
+					<td><span class="title"	data-column="JOB_ID" data-order="${order}">직업</span></td>
+					<td><span class="title"	data-column="SALARY" data-order="${order}">연봉</span></td>
+					<td><span class="title"	data-column="COMMISSION_PCT" data-order="${order}">커미션</span></td>
+					<td><span class="title"	data-column="E.MANAGER_ID" data-order="${order}">매니저</span></td>
+					<td><span class="title"	data-column="E.DEPARTMENT_ID" data-order="${order}">부서번호</span></td>
+					<td><span class="title"	data-column="DEPARTMENT_NAME" data-order="${order}">부서명</span></td>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${employees}" var="emp" varStatus="vs">
 					<tr>
-						<td>${vs.index}</td>
+						<td>${beginNo - vs.index}</td>
 						<td>${emp.employeeId}</td>
 						<td>${emp.firstName} ${emp.lastName}</td>
 						<td>${emp.email}</td>
@@ -57,8 +108,8 @@
 						<td>${emp.salary}</td>
 						<td>${emp.commissionPct}</td>
 						<td>${emp.managerId}</td>
-						<td>${emp.dept.department}</td>
-						<td>${emp.dept.departmentName}</td>
+						<td>${emp.deptDTO.departmentId}</td>
+						<td>${emp.deptDTO.departmentName}</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -73,29 +124,6 @@
 		</table>
 
 	</div>
-	
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 </body>
 </html>

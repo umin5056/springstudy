@@ -76,7 +76,7 @@ public class EmployeeListServiceImpl implements EmployeeListService {
 	
 	@Override
 	public Map<String, Object> getEmployeeListUsingScroll(HttpServletRequest request) {
-
+		
 		// 파라미터 page가 전달되지 않는 경우 page=1로 처리한다.
 		Optional<String> opt1 = Optional.ofNullable(request.getParameter("page"));
 		int page = Integer.parseInt(opt1.orElse("1"));
@@ -101,13 +101,43 @@ public class EmployeeListServiceImpl implements EmployeeListService {
 		// scroll.jsp로 응답할 데이터
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("employees", employees);
+		resultMap.put("totalPage", pageUtil.getTotalPage());
 		
 		// 응답
 		return resultMap;
 		
-		
-		
-		
+		/*
+		   resultMap이 json으로 변환될 때의 모습
+		   
+		   {
+		   		"employees": [
+	   				{
+	   					"employeeId": 100,
+	   					"firstName": "Steven",
+	   					"lastName": "King",
+	   					...,
+	   					"deptDTO": {
+	   						"departmentId": 90,
+	   						"departmentName": "Excutive",
+	   						...
+	   					}
+	   				},
+	   				{
+	   					"employeeId": 101,
+	   					"firstName": "Neena",
+	   					"lastName": "Kochar",
+	   					...,
+	   					"deptDTO": {
+	   						"departmentId": 90,
+	   						"departmentName": "Excutive",
+	   						...
+	   					}
+	   				},
+	   				...
+		   		],
+		   		"totalpage" : 12
+		   }
+		 */
 		
 	}
 

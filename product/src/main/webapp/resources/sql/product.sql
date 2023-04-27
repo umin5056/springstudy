@@ -1,10 +1,4 @@
-drop sequence product_seq;
-create sequence product_seq nocache;
-
-drop table product;
-create table product (
-    prod_no number not null primary key,
-    prod_name varchar2(100 byte) not null,
-    prod_price number,
-    prod_made_at date    
-);
+		SELECT DISTINCT E.FIRST_NAME
+          FROM DEPARTMENTS D RIGHT OUTER JOIN EMPLOYEES E
+            ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+         WHERE E.FIRST_NAME LIKE CONCAT('A', '%');

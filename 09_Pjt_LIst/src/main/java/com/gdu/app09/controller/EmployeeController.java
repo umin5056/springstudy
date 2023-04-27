@@ -36,13 +36,25 @@ public class EmployeeController {
 	
 	@GetMapping("//employees/scroll.page")
 	public String scrollPage() {
-		
 		return "employees/scroll";
 	}
 	
 	@ResponseBody // 반환되는 결과를 jsp가 아닌 실제 데이터로 받는다.
-	@GetMapping(value="/employee/scroll.do", produces = "application/json")
+	@GetMapping(value="/employees/scroll.do", produces = "application/json")
 	public Map<String, Object> scroll(HttpServletRequest request) {
 		return employeeListService.getEmployeeListUsingScroll(request);
 	}
+	
+	@GetMapping("/employees/search.do")
+	public String search(HttpServletRequest request, Model model) {
+		employeeListService.getEmployeeListUsingSearch(request, model);
+		return "employees/search";
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/employees/autoComplete.do", produces = "application/json")
+	public Map<String, Object> autoComplete(HttpServletRequest request) {
+		return employeeListService.getAutoComplete(request);
+	}
+
 }

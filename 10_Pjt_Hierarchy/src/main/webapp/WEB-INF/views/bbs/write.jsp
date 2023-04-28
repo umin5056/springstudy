@@ -34,9 +34,6 @@
 				<input type="reset" value="입력초기화">
 				<input type="button" value="목록" onclick="fnList()">
 			</div>
-			
-			
-		
 		</form>
 	</div>
 	

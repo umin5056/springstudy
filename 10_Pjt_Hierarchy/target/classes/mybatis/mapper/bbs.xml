@@ -13,7 +13,7 @@
 	
 	<select id="getBbsList" parameterType="Map" resultType="BbsDTO">
 		SELECT A.RN, A.BBS_NO, A.WRITER, A.TITLE, A.IP, A.CREATED_AT, A.STATE, A.DEPTH, A.GROUP_NO, A.GROUP_ORDER
-		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY BBS_NO DESC) AS RN, BBS_NO, WRITER, TITLE, IP, CREATED_AT, STATE, DEPTH, GROUP_NO, GROUP_ORDER
+		  FROM (SELECT ROW_NUMBER() OVER(ORDER BY GROUP_NO DESC, GROUP_ORDER ASC) AS RN, BBS_NO, WRITER, TITLE, IP, CREATED_AT, STATE, DEPTH, GROUP_NO, GROUP_ORDER
 		  		  FROM BBS) A
 	     WHERE A.RN BETWEEN #{begin} AND #{end}
 	</select>
@@ -34,6 +34,39 @@
 		   SET STATE=0
 		 WHERE BBS_NO = #{bbsNo}
 	</update>
+	
+	<!-- 기존 답글 선행작업 -->
+	<update id="increaseGroupOrder" parameterType="BbsDTO"> <!-- parameterType의 BbsDTO는 원글의 정보를 의미 -->	
+		UPDATE BBS
+		   SET GROUP_ORDER = GROUP_ORDER + 1 
+		 WHERE GROUP_NO = #{groupNo} <!-- groupNo는 원글의 groupNo이다.	 -->
+		   AND GROUP_ORDER > #{groupOrder} <!-- groupOrder는 원글의 groupOrder이다.	 -->	
+	</update>
+	
+	<!-- 답글 달기 -->
+	<insert id="addReply" parameterType="BbsDTO"> <!-- parameterType의 BbsDTO는 답글의 정보를 의미 -->	
+		INSERT INTO BBS
+			(BBS_NO, WRITER, TITLE, IP, CREATED_AT, STATE, DEPTH, GROUP_NO, GROUP_ORDER)
+		VALUES
+			(BBS_SEQ.NEXTVAL, #{writer}, #{title}, #{ip}, SYSDATE, 1, #{depth}, #{groupNo}, #{groupOrder})
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

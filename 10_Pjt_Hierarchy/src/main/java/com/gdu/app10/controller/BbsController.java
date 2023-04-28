@@ -42,7 +42,13 @@ public class BbsController {
 		int removeResult = bbsService.removeBbs(bbsNo);
 		redirectAttributes.addFlashAttribute("removeResult", removeResult);
 		return "redirect:/bbs/list.do";
-		
+	}
+	
+	@PostMapping("/reply/add.do")
+	public String replyadd(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		int addReplyResult = bbsService.addReply(request);
+		redirectAttributes.addFlashAttribute("addReplyResult", addReplyResult);
+		return "redirect:/bbs/list.do";
 	}
 	
 }

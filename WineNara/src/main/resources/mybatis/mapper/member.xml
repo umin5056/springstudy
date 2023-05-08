@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 @Mapper의 경로를 	지정한다. -->
+<mapper namespace="com.gdu.prj.mapper.MemberMapper">
+	
+	<select id="login" parameterType="Member" resultType="Member">
+		SELECT MEMBER_NO, ID, PW, NAME, EMAIL, PHONE_NUMBER, ADDRESS
+		  FROM MEMBER
+		 WHERE ID = #{id} AND PW = #{pw}
+	</select>
+	
+	<select id="autoLogin" parameterType="String" resultType="Member">
+		SELECT MEMBER_NO, ID, PW, NAME, EMAIL, PHONE_NUMBER, ADDRESS
+		  FROM MEMBER
+		 <where>
+		 	<if test="id == null">
+		 		ID = ''
+		 	</if>
+		 	<if test="id != null">
+		 		ID = #{id}
+		 	</if>
+		 </where>
+	</select>
+	
+	<update id="update" parameterType="Member">
+		UPDATE MEMBER
+		   SET PW = #{pw}, NAME = #{name}, EMAIL = #{email}, PHONE_NUMBER = #{phoneNumber}, ADDRESS = #{address}
+		 WHERE MEMBER_NO = #{memberNo}		 
+	</update>
+	
+	<insert id="signup" parameterType="Member">
+		INSERT INTO MEMBER
+			(MEMBER_NO, ID, PW, NAME, EMAIL, PHONE_NUMBER, ADDRESS)
+		VALUES
+			(MEMBER_SEQ.NEXTVAL, #{id}, #{pw}, #{name}, #{email}, #{phoneNumber}, #{address})
+	</insert>
+	
+	<delete id="delete" parameterType="int">
+		DELETE FROM MEMBER
+		 WHERE MEMBER_NO = ${memberNo}
+	</delete>
+	
+
+</mapper>

@@ -29,7 +29,7 @@
 		/*
 		let addResult = '1'; 삽입 성공
 		let addResult = '0'; 삽입 실패
-		let addResult = '1'; 삽입과 상관 없음
+		let addResult = ''; 삽입과 상관 없음
 		*/
 		let addResult = '${addResult}';
 		if(addResult != '') {

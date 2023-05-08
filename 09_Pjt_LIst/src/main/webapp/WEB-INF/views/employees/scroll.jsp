@@ -24,7 +24,7 @@
 		$.ajax({
 			// 요청
 			type: 'get',
-			url: '${contextPath}/employee/scroll.do',
+			url: '${contextPath}/employees/scroll.do',
 			data: 'page=' + page, // page=1, page2, page=3, ...으로 동작
 			
 			// 응답

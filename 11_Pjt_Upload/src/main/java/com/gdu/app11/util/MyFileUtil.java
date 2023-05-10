@@ -21,7 +21,7 @@ public class MyFileUtil {
 		int day = now.getDayOfMonth();
 		
 		// 루트/storage/2023/05/08
-		return "/Users/woomin/Documents/storage"+ sep + year + sep + String.format("%02d", month) + sep + String.format("%02d", day);
+		return "/Users/woomin/Documents/storage" + sep + year + sep + String.format("%02d", month) + sep + String.format("%02d", day);
 		
 	}
 	
@@ -47,7 +47,16 @@ public class MyFileUtil {
 		// 결과 반환
 		// UUID.extName
 		return UUID.randomUUID().toString().replace("-", "") + "." + extName;
-		
+	}
+	
+	// String tempPath 만들기 
+	public String getTempPath() {
+		return "/Users/woomin/Documents/storage" + sep + "temp";
+	}
+	
+	// String tempfileName 만들기 (zip 파일)
+	public String getTempfileName() {
+		return UUID.randomUUID().toString().replace("-", "") + ".zip";
 	}
 	
 }

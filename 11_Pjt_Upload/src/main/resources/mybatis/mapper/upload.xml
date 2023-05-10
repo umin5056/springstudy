@@ -5,13 +5,81 @@
 
 <!-- namespace는 @Mapper의 경로를 	지정한다. -->
 <mapper namespace="com.gdu.app11.mapper.UploadMapper">
+
+	<select id="getUploadList" resultType="UploadDTO">
+		SELECT U.UPLOAD_NO
+			 , U.UPLOAD_TITLE
+			 , U.UPLOAD_CONTENT
+			 , U.CREATED_AT
+			 , U.MODIFIED_AT
+			 , (SELECT COUNT(*)
+			 	  FROM ATTACH A
+			 	 WHERE U.UPLOAD_NO = A.UPLOAD_NO) AS ATTACH_COUNT
+		  FROM UPLOAD U
+	</select>
+
+	<insert id="addUpload" parameterType="UploadDTO">
+		<!-- INSERT 수행 이전(BEFORE)에 addUpload 서비스가 전달한 UploadDTO의 uploadNo 필드에 UPLOAD_SEQ.NEXTVAL 값을 저장한다. -->
+		<selectKey keyProperty="uploadNo" resultType="int" order="BEFORE">
+		<!-- keyProperty : 필드명 -->
+		<!-- resultType  : 반환 결과 타입 -->
+		<!-- order       : 쿼리문의 수행 순서를 지정 (BEFORE : 먼저 실행, AFTER : 나중에 실행) -->
+			SELECT UPLOAD_SEQ.NEXTVAL
+			  FROM DUAL
+		</selectKey>
+		INSERT INTO UPLOAD
+			(UPLOAD_NO, UPLOAD_TITLE, UPLOAD_CONTENT, CREATED_AT, MODIFIED_AT)
+		VALUES
+			(#{uploadNo}, #{uploadTitle}, #{uploadContent}, SYSTIMESTAMP, SYSTIMESTAMP)
+	</insert>
 	
 	<insert id="addAttach" parameterType="AttachDTO">
 		INSERT INTO ATTACH
-			(ATTACH_NO, PATH, ORIGIN_NAME, FILESYSTEM_NAME, DOWNLOAD_COUNT, HAS_THUMBNAIL)
+			(ATTACH_NO, PATH, ORIGIN_NAME, FILESYSTEM_NAME, DOWNLOAD_COUNT, HAS_THUMBNAIL, UPLOAD_NO)
 		VALUES
-			(ATTACH_SEQ.NEXTVAL, #{path}, #{originName}, #{filesystemName}, 0, #{hasThumbnail})
+			(ATTACH_SEQ.NEXTVAL, #{path}, #{originName}, #{filesystemName}, 0, #{hasThumbnail}, #{uploadNo})
 	</insert>
+	
+	<select id="getUploadByNo" parameterType="int" resultType="UploadDTO">
+		SELECT UPLOAD_NO, UPLOAD_TITLE, UPLOAD_CONTENT, CREATED_AT, MODIFIED_AT
+		  FROM UPLOAD
+		 WHERE UPLOAD_NO = #{uploadNo} 
+	</select>
+	
+	<select id="getAttachList" parameterType="int" resultType="AttachDTO">
+		SELECT ATTACH_NO, PATH, ORIGIN_NAME, FILESYSTEM_NAME, DOWNLOAD_COUNT, HAS_THUMBNAIL, UPLOAD_NO
+		  FROM ATTACH
+		 WHERE UPLOAD_NO = #{uploadNo} 
+	</select>
+	
+	<select id="getAttachByNo" parameterType="int" resultType="AttachDTO">
+		SELECT ATTACH_NO, PATH, ORIGIN_NAME, FILESYSTEM_NAME, DOWNLOAD_COUNT, HAS_THUMBNAIL, UPLOAD_NO
+		  FROM ATTACH
+		 WHERE ATTACH_NO = #{attachNo}
+	</select>
+	
+	<update id="increaseDownloadCount" parameterType="int">
+		UPDATE ATTACH
+		   SET DOWNLOAD_COUNT = DOWNLOAD_COUNT + 1
+		 WHERE ATTACH_NO = #{attachNo}
+	
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 

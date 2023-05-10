@@ -14,8 +14,8 @@
 drop table attach;
 create table attach(
     attach_no       number              not null, -- pk
-    path            varchar2(300 byte)  not null, -- 첨부 파일 경로
-    origin_name     varchar2(300 byte)  not null, -- 첨부 파일의 원래 이름
+    path            varchar2(3000 byte)  not null, -- 첨부 파일 경로
+    origin_name     varchar2(3000 byte)  not null, -- 첨부 파일의 원래 이름
     filesystem_name varchar2(50 byte)   not null, -- 첨부 파일의 저장 이름 
     download_count  number,                       -- 다운로드 횟수
     has_thumbnail   number,                       -- 썸네일이 있으면 1, 없으면 0  

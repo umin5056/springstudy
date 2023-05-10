@@ -9,6 +9,7 @@
 	<!-- DEPARTMENTS와 EMPLOYEES의 JOIN 결과를 저장할 resultMAP 만들기 
 		 join을 사용한 select문의 resultType으로 들어감-->
 	<resultMap type="EmpDTO" id="EmpMap">
+	
 		<id column="EMPLOYEE_ID" property="employeeId"/>
 		<result column="FIRST_NAME" property="firstName"/>
 		<result column="LAST_NAME" property="lastName"/>

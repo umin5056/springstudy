@@ -17,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,10 +76,11 @@ public class UploadServiceImpl implements UploadService {
 		// 첨부된 파일 목록
 		List<MultipartFile> files = multipartRequest.getFiles("files"); // <input type="file" name="files">
 
-		// 첨부된 파일의 유무 체크
-		if(files != null && files.isEmpty() == false) {
-			// 첨부된 파일 목록 순회
-			for(MultipartFile multipartFile : files) {
+		// 첨부된 파일 목록 순회
+		for(MultipartFile multipartFile : files) {
+			
+			// 첨부된 파일의 유무 체크
+			if(files != null && files.isEmpty() == false) {
 				
 				// 예외 처리
 				try {
@@ -213,11 +215,13 @@ public class UploadServiceImpl implements UploadService {
 		// 다운로드 응답 헤더 만들기 (Jsp/Servlet 코드)
 		/*
 			MultiValueMap<String, String> responseHeader = new HttpHeaders();
+			responseHeader.add("Content-Type", "application/octet-stream");
 			responseHeader.add("Content-Disposition", "attachment; filename=" + originName);
 			responseHeader.add("Content-Length", file.length() + "");
 		*/
 		// 다운로드 응답 헤더 만들기 (Spring 코드)
 		HttpHeaders responseHeader = new HttpHeaders();
+		responseHeader.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 		responseHeader.setContentDisposition(ContentDisposition
 												.attachment()
 												.filename(originName)
@@ -229,6 +233,9 @@ public class UploadServiceImpl implements UploadService {
 	public ResponseEntity<Resource> downloadAll(int uploadNo) {
 		
 		// 모든 첨부 파일을 zip 파일로 압축해서 다운로드 하는 서비스
+		// com.gdu.app11.batch.RemoveTempfileScheduler에 의해서 주기적으로 zip 파일들은 삭제된다.
+		
+		
 		
 		// zip 파일이 저장될 경로
 		String tempPath = myFileUtil.getTempPath();
@@ -297,5 +304,151 @@ public class UploadServiceImpl implements UploadService {
 		// 응답
 		return new ResponseEntity<Resource>(resource, responseHeader, HttpStatus.OK);
 	}
+	
+	@Override
+	public int removeUpload(int uploadNo) {
+		
+		// 삭제할 첨부 파일들의 정보
+		List<AttachDTO> attachList = uploadMapper.getAttachList(uploadNo);
+
+		// 첨부 파일이 있으면 삭제
+		if(attachList != null && attachList.isEmpty() == false) {
+			// 삭제할 첨부 파일들을 순회하면서 하나씩 삭제하기
+			for(AttachDTO attachDTO : attachList) {
+				
+				// 삭제할 첨부 파일의 File 객체
+				 File file = new File(attachDTO.getPath(), attachDTO.getFilesystemName());
+				 
+				 // 첨부파일 삭제
+				 if(file.exists()) {
+					 file.delete();
+				 }
+				 
+				 // 첨부 파일이 썸네일을 가지고 있다면 "s_로 시작하는 썸네일도 같이 삭제해야 한다.
+				if(attachDTO.getHasThumbnail() == 1) {
+					
+					// 삭제할 썸네일의 File 객체
+					File thumbnail = new File(attachDTO.getPath(), "s_" + attachDTO.getFilesystemName());
+					
+					if(file.exists()) {
+						thumbnail.delete();
+					}
+					
+				}
+				
+			}
+		}
+		
+		// DB에서 uploadNo 값을 가지는 데이터 삭제
+		// 외래키 제약 조건에 의해서 (ON DELETE CASCADE) UPLOAD 테이블의 데이터가 삭제되면 ATTACH 테이블의 데이터도 함께 삭제된다.
+		int removeResult = uploadMapper.removeUpload(uploadNo);
+		
+		return removeResult;
+	}
+	
+	@Override
+	public int updateUpload(MultipartHttpServletRequest multipartRequest) {
+		
+		/* Upload 테이블에 UploadDTO 넣기 */
+		
+		String uploadTitle = multipartRequest.getParameter("uploadTitle");
+		String uploadContent = multipartRequest.getParameter("uploadContent");
+		int uploadNo = Integer.parseInt(multipartRequest.getParameter("uploadNo"));
+		
+		UploadDTO uploadDTO = new UploadDTO();
+		uploadDTO.setUploadTitle(uploadTitle);
+		uploadDTO.setUploadContent(uploadContent);
+		uploadDTO.setUploadNo(uploadNo);
+		
+		int updateResult = uploadMapper.updateUpload(uploadDTO);
+		
+		/* Attach 테이블에 AttachDTO 넣기 */
+		
+		// 첨부된 파일 목록
+		List<MultipartFile> files = multipartRequest.getFiles("files"); // <input type="file" name="files">
+
+		// 첨부된 파일의 유무 체크
+		if(files != null && files.isEmpty() == false) {
+			// 첨부된 파일 목록 순회
+			for(MultipartFile multipartFile : files) {
+				
+				// 예외 처리
+				try {
+					
+					// 첨부 파일의 저장 경로
+					String path = myFileUtil.getPath();
+					
+					// 경로의 폴더가 없으면 폴더 생성
+					File dir = new File(path);
+					if(dir.exists() == false) {
+						dir.mkdirs();
+					}
+					
+					// 경로 구분자
+					String sep = Matcher.quoteReplacement(File.separator);
+					
+					// 첨부 파일의 원래 이름
+					String originName = multipartFile.getOriginalFilename();
+					originName = originName.substring(originName.lastIndexOf(sep) + 1); // IE브라우저는 전체 경로가 오기 때문에 마지막에 있는 파일명만 사용한다.
+					
+					// 첨부 파일의 저장 이름
+					String filesystemName = myFileUtil.getFilesystemName(originName);
+					
+					// 첨부 파일의 File 객체 (HDD에 저장할 첨부 파일)
+					File file = new File(dir, filesystemName);
+					
+					// 첨부 파일에 HDD에 저장
+					multipartFile.transferTo(file);
+					
+					/* 썸네일(첨부 파일이 이미지인 경우에만 썸네일이 가능) */
+					// 첨부 파일의 Content-Type 확인
+					String contentType = Files.probeContentType(file.toPath()); // 이미지 파일의 ContentType : image/jpeg, image/png, image/gif...
+
+					// DB에 썸네일 유무 정보 처리
+					boolean hasThumbnail = contentType != null && contentType.startsWith("image");
+
+					// 첨부 파일의 Content-Type이 이미지로 확인되면 썸네일을 만듬
+					if(hasThumbnail) {
+						
+						// HDD에 썸네일 저장 (thumbnailator 디펜던시)
+						File thumbnail = new File(dir, "s_"  + filesystemName);
+						Thumbnails.of(file)
+							.size(50, 50)
+							.toFile(thumbnail);
+					}
+					
+					/* DB에 첨부 파일 정보 저장하기 */
+					
+					// DB로 보낼 AttachDTO 만들기
+					AttachDTO attachDTO = new AttachDTO();
+					attachDTO.setFilesystemName(filesystemName);
+					attachDTO.setHasThumbnail(hasThumbnail ? 1 : 0);
+					attachDTO.setOriginName(originName);
+					attachDTO.setPath(path);
+					attachDTO.setUploadNo(uploadDTO.getUploadNo());
+					
+					// DB로 AttachDTO 보내기
+					uploadMapper.addAttach(attachDTO);
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return updateResult;
+		
+	}
+	
+	@Override
+	public int deleteAttach(int attachNo) {
+		
+		return uploadMapper.deleteAttach(attachNo);
+	}
+	
+	
+	
+	
+	
 	
 }

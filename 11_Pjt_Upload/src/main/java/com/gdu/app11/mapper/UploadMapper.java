@@ -29,4 +29,16 @@ public interface UploadMapper {
 	// download
 	public int increaseDownloadCount(int attahcNo);
 	
+	// removeUpload
+	public int removeUpload(int uploadNo);
+	
+	// updateUpload
+	public int updateUpload(UploadDTO uploadDTO);
+	
+	// deleteAttach
+	public int deleteAttach(int attachNo);
+	
+	// removeWrongfileScheduler
+	public List<AttachDTO> getAttachListInYesterday();
+	
 }

@@ -59,4 +59,19 @@ public class MyFileUtil {
 		return UUID.randomUUID().toString().replace("-", "") + ".zip";
 	}
 	
+	// String yesterdayPath 만들기
+	public String getYesterdayPath() {
+		
+		LocalDate date = LocalDate.now();
+		date.minusDays(1); // 하루 전
+		
+		int year = date.getYear();
+		int month = date.getMonthValue();
+		int day = date.getDayOfMonth();
+		
+		return "/Users/woomin/Documents/storage" + sep + year + sep + String.format("%02d", month) + sep + String.format("%02d", day);
+
+		
+	}
+	
 }

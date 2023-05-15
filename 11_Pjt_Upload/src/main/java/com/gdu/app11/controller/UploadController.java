@@ -64,4 +64,40 @@ public class UploadController {
 	public ResponseEntity<Resource> downloadAll(@RequestParam("uploadNo") int uploadNo) {
 		return uploadService.downloadAll(uploadNo);
 	}
+	
+	@PostMapping("/removeUpload.do")
+	public String removeUpload(@RequestParam("uploadNo") int uploadNo, RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("removeResult", uploadService.removeUpload(uploadNo));
+		return "redirect:/upload/list.do";
+	}
+	
+	@GetMapping("/editPage.do")
+	public String editPage(@RequestParam("uploadNo") int uploadNo, Model model) {
+		uploadService.getUploadByNo(uploadNo, model);
+		return "upload/edit";
+	}
+	
+	@PostMapping("/updateUpload.do")
+	public String updateUpload(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) {
+		int uploadNo = Integer.parseInt(multipartRequest.getParameter("uploadNo"));
+		redirectAttributes.addFlashAttribute("updateResult", uploadService.updateUpload(multipartRequest));
+		return "redirect:/upload/detail.do?uploadNo=" + uploadNo;
+	}
+	
+	@GetMapping("/deleteAttach.do")
+	public String deleteAttach(@RequestParam("attachNo") int attachNo, @RequestParam("uploadNo") int uploadNo) {
+		uploadService.deleteAttach(attachNo);
+		return "redirect:/upload/editPage.do?uploadNo=" + uploadNo;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

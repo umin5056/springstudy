@@ -11,9 +11,63 @@
 <title>Insert title here</title>
 <script src="${contextPath}/resources/js/lib/jquery-3.6.4.min.js"></script>
 <script>
-  function fnBack(){
-    history.back();
-  }
+
+	// 취소하면 이전 페이지
+	function fnCancel(){
+		$('#btnCancel').on('click', function() {
+			history.back();
+			
+		})
+  	}
+  
+	// 모두 동의
+	function fnCheckAll() {
+		$('#checkAll').on('click', function() {
+			if($(this).prop('checked')) {
+				$('.checkOne').prop('checked', true);
+			}else {
+				$('.checkOne').prop('checked', false);
+			}
+		});
+	}
+	
+	// 개별 선택
+	function fnCheckOne() {
+		$('.checkOne').on('click', function() {
+			var chkLength = $('.checkOne').length;
+			var chkCount = $('.checkOne:checked').length;
+			
+			if(chkLength == chkCount) {
+				$('#checkAll').prop('checked', true);
+			}else {
+				$('#checkAll').prop('checked', false);
+			}
+			
+		});
+	}
+	
+	
+	// 가입 페이지로 이동하기(frmAgree의 submit)
+	function fnFrmAgreeSubmit() {
+		$('#frmAgree').on('submit', function(event) {
+			if($('#service').is(':checked') == false || $('#privacy').is(':checked') == false) {
+				alert('필수 약관에 동의해야 가입할 수 있습니다.');
+				event.preventDefault();
+				return;
+			}
+		})
+	}
+	
+	// 함수 호출
+	$(function() {
+		fnCancel();
+		fnFrmAgreeSubmit();
+		fnCheckAll();
+		fnCheckOne();
+	
+	})
+  
+  
 </script>
 </head>
 <body>
@@ -22,7 +76,7 @@
   
     <h1>약관 동의하기</h1>
     
-    <form id="frmAgree" action="${contextPath}/user/join.jsp">
+    <form id="frmAgree" action="${contextPath}/user/join.form">
     
       <div>
         <input type="checkbox" id="checkAll">
@@ -32,7 +86,7 @@
       <hr>
       
       <div>
-        <input type="checkbox" id="service">
+        <input type="checkbox" id="service" class="checkOne">
         <label for="service" >이용약관 동의(필수)</label>
         <div>
           <textarea>본 약관은 ...</textarea>
@@ -40,7 +94,7 @@
       </div>
       
       <div>
-        <input type="checkbox" id="privacy">
+        <input type="checkbox" id="privacy" class="checkOne">
         <label for="privacy">개인정보수집 동의(필수)</label>
         <div>
           <textarea>개인정보보호법에 따라 ...</textarea>
@@ -48,7 +102,11 @@
       </div>
       
       <div>
-        <input type="checkbox" id="location" name="location" >
+      	<!-- 
+      		1. 체크한 경우 : 파라미터 location이 on 값을 가지고 전달된다.
+      		2. 체크 안 한 경우 : 파라미터 locationdㅣ 전달되지 않는다.
+      	 -->
+        <input type="checkbox" id="location" class="checkOne" name="location" >
         <label for="location">위치정보수집 동의(선택)</label>
         <div>
           <textarea>위치정보 ...</textarea>
@@ -56,7 +114,7 @@
       </div>
       
       <div>
-        <input type="checkbox" id="event" name="event">
+        <input type="checkbox" id="event" class="checkOne" name="event">
         <label for="event">이벤트 동의(선택)</label>
         <div>
           <textarea>이벤트 ...</textarea>
@@ -66,7 +124,7 @@
       <hr>
       
       <div>
-        <input type="button" value="취소" onclick="fnBack()">
+        <input id="btnCancel" type="button" value="취소" onclick="fnCancel()">
         <button>다음</button>
       </div>
     

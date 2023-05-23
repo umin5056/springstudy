@@ -99,18 +99,7 @@ public class UserController {
 		 	3. 로그인 시켜서 최신 로그인 날짜 변경해주기
 		 */
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 }

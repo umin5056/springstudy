@@ -12,4 +12,6 @@ public interface BlogService {
 	public void loadBlogList(HttpServletRequest request, Model Model);
 	public void addBlog(HttpServletRequest request, HttpServletResponse response);
 	public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartHttpServletRequest);
+	public int increaseHit(int blogNo);
+	public void loadBlog(int blogNo, Model model);
 }

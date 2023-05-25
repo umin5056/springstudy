@@ -4,8 +4,13 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- namespace는 @Mapper의 경로를 	지정한다. -->
-<mapper namespace="com.gdu.app13.mapper.BlogMapper">
-	
+<mapper namespace="com.gdu.app13.mapper.MemberMapper">
+		
+		<select id="selectMemberByMap" parameterType="Map" resultType="MemberDTO">
+			SELECT MEMBER_NO, ID, PW, NAME
+			  FROM MEMBER_T
+			 WHERE ID = #{id} AND PW = #{pw}
+		</select>
 	
 	
 

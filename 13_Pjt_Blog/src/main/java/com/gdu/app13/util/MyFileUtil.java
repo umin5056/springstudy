@@ -17,12 +17,12 @@ public class MyFileUtil {
 	public String getPath() {
 		LocalDate now = LocalDate.now();
 		// 루트/storage/2023/05/08
-		return "/storage" + sep + now.getYear() + sep + String.format("%02d", now.getMonthValue()) + sep + String.format("%02d", now.getDayOfMonth());
+		return "/Users/woomin/Documents/storage" + sep + now.getYear() + sep + String.format("%02d", now.getMonthValue()) + sep + String.format("%02d", now.getDayOfMonth());
 	}
 	
 	// String summernoteImagePath 만들기
 	public String getSummernoteImagePath() {
-		return "/storage" + sep + "summernote";
+		return "/Users/woomin/Documents/storage" + sep + "summernote";
 	}
 	
 	// String filesystemName 만들기

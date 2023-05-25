@@ -4,13 +4,64 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- namespace는 @Mapper의 경로를 	지정한다. -->
-<mapper namespace="com.gdu.app13.mapper.MemberMapper">
+<mapper namespace="com.gdu.app13.mapper.BlogMapper">
+	
+	<select id="getBlogCount" resultType="int">
+		SELECT COUNT(*)
+		  FROM BLOG_T
+	</select>
+	
+	<select id="getBlogList" parameterType="Map" resultType="BlogDTO">
 		
-		<select id="selectMemberByMap" parameterType="Map" resultType="MemberDTO">
-			SELECT MEMBER_NO, ID, PW, NAME
-			  FROM MEMBER_T
-			 WHERE ID = #{id} AND PW = #{pw}
-		</select>
+	</select>
+	
+	<!-- 
+		어떤 BLOG_SEQ 값이 사용되었는지 addBlog() 서비스에 알려줘야 하기 때문에
+		<selectKey>를 사용해서 addBlog() 서비스가 전달한 BlogDTO 객체의 blogNo 필드값에
+		BLOG_SEQ가 발생시킨 값을 저장한다.
+	 -->
+	
+	<insert id="addBlog" parameterType="BlogDTO">
+		<selectKey keyProperty="blogNo" resultType="int" order="BEFORE">
+			SELECT BLOG_SEQ.NEXTVAL
+			  FROM DUAL
+		</selectKey>
+		INSERT INTO BLOG_T (
+				 BLOG_NO
+			 , TITLE
+			 , CONTENT
+			 , HIT
+			 , CREATED_AT
+			 , MODIFIED_AT
+			 , MEMBER_NO	
+		) VALUES (
+				 #{blogNo}
+			 , #{title}
+			 , #{content}
+			 , 0
+			 , SYSDATE
+			 , SYSDATE
+			 , #{memberDTO.memberNo}
+		)
+	</insert>
+	
+	<insert id="addSummernoteImage" parameterType="SummernoteImageDTO">
+		INSERT INTO SUMMERNOTE_IMAGE_T(
+			  FILESYSTEM_NAME
+			, BLOG_NO
+		)VALUES (
+				#{filesystemName}
+			, #{blogNo}	
+		)
+		
+	</insert>
+	
+	
+	
+	
+	
+	
+	
 	
 	
 
